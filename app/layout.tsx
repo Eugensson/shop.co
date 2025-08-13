@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
+import { Analytics } from "@vercel/analytics/next";
 import { Inter, Montserrat } from "next/font/google";
 
 import { Toaster } from "@/components/ui/sonner";
@@ -40,6 +41,7 @@ export default async function RootLayout({
         >
           {children}
           <Toaster />
+          <Analytics />
         </body>
       </html>
     </SessionProvider>
