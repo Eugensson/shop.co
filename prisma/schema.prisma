@@ -1,0 +1,286 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id                    String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name                  String?
+  email                 String?                @unique
+  emailVerified         DateTime?
+  image                 String?
+  password              String?
+  role                  UserRole               @default(USER)
+  accounts              Account[]
+  isTwoFactorEnabled    Boolean                @default(false)
+  twoFactorConfirmation TwoFactorConfirmation?
+  reviews               Review[]
+  isActive              Boolean                @default(true)
+  order                 Order[]
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+}
+
+model Account {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User?    @relation(fields: [userId], references: [id])
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorConfirmation {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @unique @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Brand {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Color {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  slug           String           @unique
+  hex            String
+  productVariant ProductVariant[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model Size {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  slug           String           @unique
+  value          String
+  productVariant ProductVariant[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+enum DressStyle {
+  CASUAL
+  FORMAL
+  PARTY
+  GYM
+}
+
+model ProductImage {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String   @db.ObjectId
+  url       String
+  publicId  String
+  isMain    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductVariant {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId       String   @db.ObjectId
+  color           Color    @relation(fields: [colorId], references: [id])
+  colorId         String   @db.ObjectId
+  size            Size     @relation(fields: [sizeId], references: [id])
+  sizeId          String   @db.ObjectId
+  quantity        Int
+  price           Float
+  discount        Int      @default(0)
+  discountedPrice Float
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([productId, colorId, sizeId])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  UNISEX
+}
+
+model Category {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  slug               String           @unique
+  sku                String           @unique
+  description        String
+  images             ProductImage[]
+  dressStyle         DressStyle       @default(CASUAL)
+  category           Category         @relation(fields: [categoryId], references: [id])
+  categoryId         String           @db.ObjectId
+  brand              Brand            @relation(fields: [brandId], references: [id])
+  brandId            String           @db.ObjectId
+  variants           ProductVariant[]
+  avgRating          Float            @default(0)
+  reviews            Review[]
+  countReviews       Int              @default(0)
+  ratingDistribution Json             @default("[]")
+  gender             Gender           @default(MALE)
+  isNewArrival       Boolean          @default(true)
+  isArchived         Boolean          @default(false)
+  minPrice           Float
+  maxPrice           Float
+  orderItem          OrderItem[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model Review {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  isVerifiedPurchase Boolean  @default(false)
+  rating             Int
+  title              String
+  comment            String
+  product            Product  @relation(fields: [productId], references: [id])
+  productId          String   @db.ObjectId
+  user               User     @relation(fields: [userId], references: [id])
+  userId             String   @db.ObjectId
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@unique([productId, userId])
+}
+
+enum PaymentMethod {
+  CARD
+  CASH
+  BANK_TRANSFER
+}
+
+enum DeliveryMethod {
+  PICKUP_FROM_SHOWROOM
+  LOGISTICS_COMPANY_SERVICE
+}
+
+model OrderItem {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  product         Product  @relation(fields: [productId], references: [id])
+  productId       String   @db.ObjectId
+  productName     String
+  productSlug     String
+  brandName       String
+  size            String
+  sizeId          String   @db.ObjectId
+  color           String
+  colorId         String   @db.ObjectId
+  quantity        Int
+  price           Float
+  discountedPrice Float
+  imagePublicId   String
+  imageUrl        String
+  order           Order?   @relation(fields: [orderId], references: [id])
+  orderId         String?  @db.ObjectId
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model DeliveryAddress {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName  String
+  lastName   String
+  address    String
+  city       String
+  state      String
+  country    String
+  postalCode String
+  email      String
+  phone      String
+  order      Order?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Order {
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  user              User             @relation(fields: [userId], references: [id])
+  userId            String           @db.ObjectId
+  items             OrderItem[]
+  totalPrice        Float
+  paymentMethod     PaymentMethod
+  deliveryMethod    DeliveryMethod
+  deliveryAddress   DeliveryAddress? @relation(fields: [deliveryAddressId], references: [id])
+  deliveryAddressId String?          @unique @db.ObjectId
+  isRead            Boolean          @default(false)
+  isPaid            Boolean          @default(false)
+  isDelivered       Boolean          @default(false)
+  paidAt            DateTime?
+  deliveredAt       DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  subject   String
+  email     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
