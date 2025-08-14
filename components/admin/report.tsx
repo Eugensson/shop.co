@@ -61,7 +61,9 @@ export const Report = () => {
   return (
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="h3">Overview report</h2>
+        <h2 className="text-2xl leading-relaxed font-medium">
+          Overview report
+        </h2>
         <CalendarDateRangePicker
           defaultDate={date}
           setDate={handleDateChange}

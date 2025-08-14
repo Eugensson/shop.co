@@ -72,7 +72,9 @@ const AdminDashboardPage = async () => {
 
   return (
     <section className="flex-1 p-5 lg:p-10 flex flex-col gap-5">
-      <h2 className="h3">Dashboard overview</h2>
+      <h2 className="text-2xl leading-relaxed font-medium">
+        Dashboard overview
+      </h2>
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
         {OVERVIEW_CARD_ITEMS.map(
           ({ id, title, icon, value, href, description }) => (
@@ -84,7 +86,9 @@ const AdminDashboardPage = async () => {
                 </CardHeader>
 
                 <CardContent className="text-center">
-                  <h2 className="h3">{value}</h2>
+                  <h2 className="text-2xl leading-relaxed font-medium">
+                    {value}
+                  </h2>
                 </CardContent>
 
                 <CardFooter
