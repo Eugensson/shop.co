@@ -64,25 +64,26 @@ export const ADMIN_NAV_LINKS = [
     icon: LayoutDashboard,
   },
   {
-    title: "Brands",
-    url: "/brands",
-    icon: Tag,
-  },
-  {
     title: "Categories",
     url: "/categories",
     icon: Group,
-  },
-  {
-    title: "Colors",
-    url: "/colors",
-    icon: Palette,
   },
   {
     title: "Products",
     url: "/products",
     icon: Barcode,
   },
+  {
+    title: "Brands",
+    url: "/brands",
+    icon: Tag,
+  },
+  {
+    title: "Colors",
+    url: "/colors",
+    icon: Palette,
+  },
+
   {
     title: "Sizes",
     url: "/sizes",

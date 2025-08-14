@@ -136,3 +136,12 @@ export type OrderWithRelations = Prisma.OrderGetPayload<{
     user: true;
   };
 }>;
+
+export interface OverviewCard {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  value: string | number;
+  href: string;
+  description?: string;
+}
