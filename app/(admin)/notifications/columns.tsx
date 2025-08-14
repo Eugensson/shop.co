@@ -1,19 +1,19 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowDownUp, Eye, Loader, Mail, MailOpen, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 
 import {
   deleteNotification,
   editNotification,
 } from "@/actions/notification.actions";
 import { cn, formatDate } from "@/lib/utils";
-import { toast } from "sonner";
-import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 
 export type Notification = {
   id: string;
