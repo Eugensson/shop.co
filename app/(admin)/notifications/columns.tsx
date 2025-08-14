@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowDownUp, Eye, Loader, Mail, MailOpen, Trash2 } from "lucide-react";
@@ -12,6 +12,8 @@ import {
   editNotification,
 } from "@/actions/notification.actions";
 import { cn, formatDate } from "@/lib/utils";
+import { toast } from "sonner";
+import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 
 export type Notification = {
   id: string;
@@ -215,17 +217,31 @@ const DeleteButton = ({
   isRead: boolean;
 }) => {
   const [isPending, startTransition] = useTransition();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleDelete = () => {
+    startTransition(() => {
+      deleteNotification(notificationId)
+        .then((data) => {
+          if (data?.error) {
+            toast.error(data.error);
+          } else if (data?.success) {
+            toast.success(data.success);
+          } else {
+            toast.error("An unknown error occurred. Please try again.");
+          }
+        })
+        .catch(() => {
+          toast.error("An error occurred while deleting the notification.");
+        });
+    });
+  };
 
   return (
-    <form
-      action={() => {
-        startTransition(async () => {
-          await deleteNotification(notificationId);
-        });
-      }}
-    >
+    <>
       <Button
-        type="submit"
+        onClick={() => setIsDialogOpen(true)}
+        type="button"
         variant="outline"
         className="cursor-pointer"
         title="Delete"
@@ -239,6 +255,20 @@ const DeleteButton = ({
           <Trash2 className={cn(isRead && "text-muted-foreground")} />
         )}
       </Button>
-    </form>
+
+      <ConfirmDeleteDialog
+        isOpen={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        title="Confirm delete notification"
+        description="Are you sure you want to delete this notification? This action cannot be undone."
+        onConfirm={async () => {
+          await handleDelete();
+          setIsDialogOpen(false);
+        }}
+        loading={isPending}
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
+    </>
   );
 };

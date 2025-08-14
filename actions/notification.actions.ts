@@ -31,7 +31,7 @@ export const createNotification = async (
     return handleUnknownError(error);
   }
 
-  return { success: "Notification sent!" };
+  return { success: "Message sent!" };
 };
 
 export const editNotification = async (
@@ -40,7 +40,7 @@ export const editNotification = async (
   const validatedFields = EditNotificationSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Недійсні поля!" };
+    return { error: "Invalid fields!" };
   }
 
   try {
@@ -72,9 +72,17 @@ export const editNotification = async (
 
 export const deleteNotification = async (notificationId: string) => {
   try {
+    if (!notificationId) {
+      return { error: "Missing notificationId!" };
+    }
+
     await prisma.notification.delete({
       where: { id: notificationId },
     });
+
+    revalidatePath("/notifications");
+
+    return { success: "Notification deleted!" };
   } catch (error: unknown) {
     return handleUnknownError(error);
   }
