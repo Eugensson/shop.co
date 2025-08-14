@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
+
 import { Nav } from "@/components/nav";
 import { CheckoutForm } from "@/components/checkout-form";
+
+export const metadata: Metadata = {
+  title: "Checkout",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const CheckoutPage = () => {
   return (

@@ -1,4 +1,14 @@
+import type { Metadata } from "next";
+
 import { NewPasswordForm } from "@/components/auth/new-password-form";
+
+export const metadata: Metadata = {
+  title: "Change password",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const NewPasswordPage = () => {
   return (

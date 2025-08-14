@@ -1,15 +1,104 @@
+import { cache } from "react";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { ClipboardList, Info } from "lucide-react";
 
+import NotFound from "@/app/not-found";
 import { Nav } from "@/components/nav";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+import { idSchema } from "@/schemas";
 import { prisma } from "@/prisma/prisma";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, formatId } from "@/lib/utils";
 import { DELIVERY_METHOD_OPTIONS, PAYMENT_METHOD_OPTIONS } from "@/constants";
+
+export const revalidate = 300;
+
+const getOrderCached = cache(async (id: string) => {
+  const isValid = idSchema.safeParse(id).success;
+
+  if (!isValid) return null;
+
+  return prisma.order.findUnique({
+    where: { id },
+    include: {
+      items: { include: { product: { select: { images: true } } } },
+      deliveryAddress: true,
+    },
+  });
+});
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> => {
+  const { id } = await params;
+
+  const order = await getOrderCached(id);
+
+  if (!order) {
+    return {
+      title: `Order #${formatId(id)} not found`,
+      description:
+        "Unfortunately, this order does not exist or has been removed.",
+      openGraph: {
+        title: `Order #${formatId(id)} not found`,
+        description:
+          "Unfortunately, this order does not exist or has been removed.",
+        siteName: "shop.co",
+        type: "website",
+        locale: "en-US",
+      },
+      twitter: {
+        card: "summary",
+        title: `Order #${formatId(id)} not found`,
+        description:
+          "Unfortunately, this order does not exist or has been removed.",
+      },
+    };
+  }
+
+  const firstImageUrl =
+    order.items[0]?.imageUrl ||
+    order.items[0]?.product.images[0]?.url ||
+    "/placeholder.jpg";
+
+  const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
+
+  return {
+    title: `Order №${formatId(id)} – ${totalItems} items`,
+    description: `Description №${formatId(id)} with ${totalItems} items.`,
+    openGraph: {
+      title: `Order №${formatId(id)}`,
+      description: `Description №${formatId(id)} with ${totalItems} items.`,
+      siteName: "shop.co",
+      type: "website",
+      locale: "en-US",
+      images: [
+        {
+          url: firstImageUrl,
+          alt: `Order №${formatId(id)}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `Order №${formatId(id)}`,
+      description: `Description №${formatId(id)} with ${totalItems} items.`,
+      images: [firstImageUrl],
+    },
+    robots: {
+      index: false,
+      follow: true,
+    },
+  };
+};
 
 interface OrderDetailsPageProps {
   params: Promise<{ id: string }>;
@@ -17,21 +106,10 @@ interface OrderDetailsPageProps {
 
 const OrderDetailsPage = async ({ params }: OrderDetailsPageProps) => {
   const { id } = await params;
-
-  const order = await prisma.order.findUnique({
-    where: { id },
-    include: {
-      items: true,
-      deliveryAddress: true,
-    },
-  });
+  const order = await getOrderCached(id);
 
   if (!order) {
-    return (
-      <section className="container mx-auto max-w-3xl p-5 text-center text-destructive">
-        <p>Order not found.</p>
-      </section>
-    );
+    return <NotFound />;
   }
 
   return (
@@ -58,44 +136,50 @@ const OrderDetailsPage = async ({ params }: OrderDetailsPageProps) => {
             <ScrollArea className="h-60 lg:h-90 pr-4">
               <Table>
                 <TableBody>
-                  {order.items.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <div className="relative w-40 h-40 bg-[#f0eeed] rounded-xl overflow-hidden">
-                          <Image
-                            src={item.imageUrl ?? "/placeholder.jpg"}
-                            alt={item.productName}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 80px"
-                            className="object-contain"
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-primary">
-                        <h2 className="text-lg font-bold mb-2">
-                          {item.productName}
-                        </h2>
-                        <p className="lowercase">
-                          brand: {item.brandName}; size: {item.size};
-                        </p>
-                        <p className="lowercase">
-                          color: {item.color}; quantity: {item.quantity};
-                        </p>
-                      </TableCell>
-                      <TableCell className="text-right font-bold text-lg text-primary">
-                        {item.discountedPrice < item.price ? (
-                          <div>
-                            <span className="line-through text-muted-foreground text-sm mr-1">
-                              {formatCurrency(item.price)}
-                            </span>
-                            {formatCurrency(item.discountedPrice)}
+                  {order.items.map((item) => {
+                    const imageSrc =
+                      item.imageUrl ||
+                      item.product.images[0]?.url ||
+                      "/placeholder.jpg";
+                    return (
+                      <TableRow key={item.id}>
+                        <TableCell>
+                          <div className="relative w-40 h-40 bg-[#f0eeed] rounded-xl overflow-hidden">
+                            <Image
+                              src={imageSrc}
+                              alt={item.productName}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 80px"
+                              className="object-contain"
+                            />
                           </div>
-                        ) : (
-                          formatCurrency(item.price)
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                        <TableCell className="text-primary">
+                          <h2 className="text-lg font-bold mb-2">
+                            {item.productName}
+                          </h2>
+                          <p className="lowercase">
+                            brand: {item.brandName}; size: {item.size};
+                          </p>
+                          <p className="lowercase">
+                            color: {item.color}; quantity: {item.quantity};
+                          </p>
+                        </TableCell>
+                        <TableCell className="text-right font-bold text-lg text-primary">
+                          {item.discountedPrice < item.price ? (
+                            <div>
+                              <span className="line-through text-muted-foreground text-sm mr-1">
+                                {formatCurrency(item.price)}
+                              </span>
+                              {formatCurrency(item.discountedPrice)}
+                            </div>
+                          ) : (
+                            formatCurrency(item.price)
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </ScrollArea>

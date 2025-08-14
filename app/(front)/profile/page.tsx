@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import {
   Card,
@@ -11,6 +12,14 @@ import { Separator } from "@/components/ui/separator";
 import { BrowsingHistory } from "@/components/browsing-history";
 
 import { PROFILE_LIST } from "@/constants";
+
+export const metadata: Metadata = {
+  title: "Profile",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const ProfilePage = async () => {
   return (

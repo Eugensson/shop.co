@@ -1,8 +1,18 @@
+import type { Metadata } from "next";
+
 import { Nav } from "@/components/nav";
 import { SecurityProfileForm } from "@/components/security-profile-form";
 
 import { currentUser } from "@/lib/auth";
 import { ExtendedUser } from "@/next-auth";
+
+export const metadata: Metadata = {
+  title: "Security settings",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const SecurityProfilePage = async () => {
   const user = await currentUser();

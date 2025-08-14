@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
+
 import { Nav } from "@/components/nav";
 import { CartItemList } from "@/components/cart-item-list";
+
+export const metadata: Metadata = {
+  title: "Your cart",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const CartPage = () => {
   return (

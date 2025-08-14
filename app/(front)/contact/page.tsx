@@ -1,8 +1,13 @@
 import Image from "next/image";
+import type { Metadata } from "next";
 
 import { Map } from "@/components/map";
 import { Nav } from "@/components/nav";
 import ContactForm from "@/components/contact-form";
+
+export const metadata: Metadata = {
+  title: "Contact",
+};
 
 const ContactPage = () => {
   return (

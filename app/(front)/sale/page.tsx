@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { Nav } from "@/components/nav";
 import { SortBar } from "@/components/sort-bar";
 import { FilterBar } from "@/components/filter-bar";
@@ -11,6 +13,10 @@ import { getColors } from "@/actions/color.actions";
 import { getBrands } from "@/actions/brand.actions";
 import { getCategories } from "@/actions/category.actions";
 import { getSaleProducts } from "@/actions/product.actions";
+
+export const metadata: Metadata = {
+  title: "Sale",
+};
 
 interface SalesPageProps {
   searchParams: Promise<{

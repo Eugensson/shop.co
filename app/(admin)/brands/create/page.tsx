@@ -1,4 +1,14 @@
+import type { Metadata } from "next";
+
 import { CreateBrandForm } from "@/components/admin/create-brand-form";
+
+export const metadata: Metadata = {
+  title: "Create brand",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const CreateBrandPage = () => {
   return (

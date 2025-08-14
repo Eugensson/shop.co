@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Users, Inbox, CalendarDays, Calculator } from "lucide-react";
 
 import {
@@ -15,6 +16,14 @@ import { buttonVariants } from "@/components/ui/button";
 import { OverviewCard } from "@/types";
 import { prisma } from "@/prisma/prisma";
 import { cn, formatCurrency } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const AdminDashboardPage = async () => {
   const [

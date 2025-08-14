@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { Hero } from "@/components/hero";
 import { Separator } from "@/components/ui/separator";
 import { TopSelling } from "@/components/top-selling";
@@ -7,6 +9,10 @@ import { Testimonials } from "@/components/testimonials";
 import { BrowseByDressStyle } from "@/components/browse-by-dress-style";
 
 import { prisma } from "@/prisma/prisma";
+
+export const metadata: Metadata = {
+  title: "Homepage",
+};
 
 const Homepage = async () => {
   const [newArrivalsProducts, topSellingProducts] = await Promise.all([

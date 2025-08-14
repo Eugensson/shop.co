@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { Metadata } from "next";
 import { ClipboardList, Info } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
@@ -10,6 +11,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/prisma/prisma";
 import { formatCurrency, cn } from "@/lib/utils";
 import { DELIVERY_METHOD_OPTIONS, PAYMENT_METHOD_OPTIONS } from "@/constants";
+
+export const metadata: Metadata = {
+  title: "Order details",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface OrderDetailsAdminPageProps {
   params: Promise<{ orderId: string }>;

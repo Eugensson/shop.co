@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
+
 import { EditBrandForm } from "@/components/admin/edit-brand-form";
 
 import { prisma } from "@/prisma/prisma";
+
+export const metadata: Metadata = {
+  title: "Edit brand",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface EditBrandPageProps {
   params: Promise<{

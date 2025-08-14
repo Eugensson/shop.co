@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
+
 import { EditProductForm } from "@/components/admin/edit-product-form";
 
 import { prisma } from "@/prisma/prisma";
+
+export const metadata: Metadata = {
+  title: "Edit product",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface ProductInfoPageProps {
   params: Promise<{

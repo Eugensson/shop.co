@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import { AtSign, List, MessageSquareText, User } from "lucide-react";
 
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { prisma } from "@/prisma/prisma";
+
+export const metadata: Metadata = {
+  title: "Notification detail",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface NotificationDetailPageProps {
   params: Promise<{

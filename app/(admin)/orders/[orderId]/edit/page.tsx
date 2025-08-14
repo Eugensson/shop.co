@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
+
 import { EditOrderForm } from "@/components/admin/edit-order-form";
 
 import { prisma } from "@/prisma/prisma";
 import { OrderWithRelations } from "@/types";
+
+export const metadata: Metadata = {
+  title: "Edit order",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface EditOrderAdminPageProps {
   params: Promise<{

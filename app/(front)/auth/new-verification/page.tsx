@@ -1,4 +1,14 @@
+import type { Metadata } from "next";
+
 import { NewVerificationForm } from "@/components/auth/new-verification-form";
+
+export const metadata: Metadata = {
+  title: "Verify your email",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const NewVerificationPage = () => {
   return (

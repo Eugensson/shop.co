@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import {
   Table,
@@ -15,6 +16,14 @@ import { currentUser } from "@/lib/auth";
 import { prisma } from "@/prisma/prisma";
 import { formatCurrency } from "@/lib/utils";
 import { DELIVERY_METHOD_OPTIONS, PAYMENT_METHOD_OPTIONS } from "@/constants";
+
+export const metadata: Metadata = {
+  title: "Your order history",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const OrderHistoryPage = async () => {
   const user = await currentUser();

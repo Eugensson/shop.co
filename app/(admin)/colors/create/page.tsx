@@ -1,4 +1,14 @@
+import type { Metadata } from "next";
+
 import { CreateColorForm } from "@/components/admin/create-color-form";
+
+export const metadata: Metadata = {
+  title: "Create color",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const CreateColorPage = () => {
   return (

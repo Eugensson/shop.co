@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { UserCog } from "lucide-react";
 import { UserRole } from "@prisma/client";
 
@@ -6,6 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { currentUser } from "@/lib/auth";
+
+export const metadata: Metadata = {
+  title: "Profile info",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const ProfileInfoPage = async () => {
   const user = await currentUser();

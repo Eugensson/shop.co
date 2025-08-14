@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
+
 import { Nav } from "@/components/nav";
 import { Wishlist } from "@/components/wishlist";
+
+export const metadata: Metadata = {
+  title: "Your wishlist",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const WishlistPage = () => {
   return (

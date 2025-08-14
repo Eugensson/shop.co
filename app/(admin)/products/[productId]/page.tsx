@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { PencilLine, Undo2 } from "lucide-react";
 
 import {
@@ -17,6 +18,14 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 import { prisma } from "@/prisma/prisma";
 import { formatDate } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: "Product details",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface ProductInfoPageProps {
   params: Promise<{

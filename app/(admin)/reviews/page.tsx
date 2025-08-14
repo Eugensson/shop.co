@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
+
 import { DataTable } from "@/app/(admin)/reviews/data-table";
 import { columns, Review } from "@/app/(admin)/reviews/columns";
 
 import { prisma } from "@/prisma/prisma";
+
+export const metadata: Metadata = {
+  title: "Reviews",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const AdminReviewsPage = async () => {
   const data = await prisma.review.findMany({

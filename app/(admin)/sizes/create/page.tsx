@@ -1,4 +1,14 @@
+import type { Metadata } from "next";
+
 import { CreateSizeForm } from "@/components/admin/create-size-form";
+
+export const metadata: Metadata = {
+  title: "Create size",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const CreateSizePage = () => {
   return (

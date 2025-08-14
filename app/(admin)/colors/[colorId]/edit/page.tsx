@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
+
 import { EditColorForm } from "@/components/admin/edit-color-form";
 
 import { prisma } from "@/prisma/prisma";
+
+export const metadata: Metadata = {
+  title: "Edit color",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface EditColorPageProps {
   params: Promise<{

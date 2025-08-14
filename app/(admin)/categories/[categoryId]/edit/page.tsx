@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
+
 import { EditCategoryForm } from "@/components/admin/edit-category-form";
 
 import { prisma } from "@/prisma/prisma";
+
+export const metadata: Metadata = {
+  title: "Edit category",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface EditCategoryPageProps {
   params: Promise<{

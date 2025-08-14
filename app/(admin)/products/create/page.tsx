@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
+
 import CreateProductForm from "@/components/admin/create-product-form";
 
 import { prisma } from "@/prisma/prisma";
+
+export const metadata: Metadata = {
+  title: "Create product",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const CreateProductPage = async () => {
   const [brands, categories, colors, sizes] = await Promise.all([

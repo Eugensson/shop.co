@@ -1,6 +1,17 @@
-import { prisma } from "@/prisma/prisma";
+import type { Metadata } from "next";
+
 import { DataTable } from "@/app/(admin)/orders/data-table";
 import { columns, Order } from "@/app/(admin)/orders/columns";
+
+import { prisma } from "@/prisma/prisma";
+
+export const metadata: Metadata = {
+  title: "Orders",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 const AdminOrdersPage = async () => {
   const data = await prisma.order.findMany({

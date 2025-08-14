@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
+
 import { EditSizeForm } from "@/components/admin/edit-size-form";
 
 import { prisma } from "@/prisma/prisma";
+
+export const metadata: Metadata = {
+  title: "Edit size",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface EditSizePageProps {
   params: Promise<{
