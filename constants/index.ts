@@ -16,11 +16,16 @@ import {
 } from "lucide-react";
 import { DressStyle, Gender, UserRole } from "@prisma/client";
 
-import ckLogo from "@/public/logo_ck.png";
-import zaraLogo from "@/public/logo_zara.png";
-import gucciLogo from "@/public/logo_gucci.png";
-import pradaLogo from "@/public/logo_prada.png";
-import versaceLogo from "@/public/logo_versace.png";
+import caLogo from "@/public/c_a.png";
+import hmLogo from "@/public/h_m.png";
+import pumaLogo from "@/public/puma.png";
+import nikeLogo from "@/public/nike.png";
+import zaraLogo from "@/public/zara.png";
+import croppLogo from "@/public/cropp.png";
+import mangoLogo from "@/public/mango.png";
+import adidasLogo from "@/public/adidas.png";
+import riekerLogo from "@/public/rieker.png";
+import underArmourLogo from "@/public/under_armour.png";
 
 export const ROLE_TYPES = [
   { name: "Admin", value: UserRole.ADMIN },
@@ -28,11 +33,16 @@ export const ROLE_TYPES = [
 ];
 
 export const LOGO_LIST = [
-  { name: "Versace", image: versaceLogo },
+  { name: "C&A", image: caLogo },
+  { name: "H&M", image: hmLogo },
+  { name: "Adidas", image: adidasLogo },
+  { name: "Cropp", image: croppLogo },
+  { name: "Mango", image: mangoLogo },
+  { name: "Nike", image: nikeLogo },
+  { name: "Puma", image: pumaLogo },
+  { name: "Rieker", image: riekerLogo },
+  { name: "Under Armour", image: underArmourLogo },
   { name: "Zara", image: zaraLogo },
-  { name: "Gucci", image: gucciLogo },
-  { name: "Prada", image: pradaLogo },
-  { name: "CalvinKlein", image: ckLogo },
 ];
 
 export const NAV_LINKS = [
